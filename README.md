@@ -2,7 +2,7 @@
 Rust Server-Sent Events (SSE) Device Upgrade Push Event Server to Client using Redis Cache and PostgresSQL
 
 
-The SSE Device Upgrade Server (SSEDUS) is a HTTP Server that routinely sends a stream of device upgrade events to the
+The SSE Device Upgrade Server is a HTTP Server that routinely sends a stream of device upgrade events to the
 HTTP client. The server launches two distinct tasks to actively upgrade a device firmware version to the device DB (PostgreSQL)
 and detect changes upgrade changes to the device DB to dispatch this upgrade event as a SSE payload to the device client process.
 
