@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:6.2
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: sse
+      POSTGRES_PASSWORD: ssepassword
+      POSTGRES_DB: device_upgrades
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  sse-server:
+    build:
+      context: .
+      dockerfile: sse-device-server/Dockerfile.sse-server
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgres://sse:ssepassword@postgres/device_upgrades
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - app-network
+
+  device-client:
+    build:
+      context: .
+      dockerfile: sse-device-client/Dockerfile.sse-client
+    depends_on:
+      - sse-server
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:

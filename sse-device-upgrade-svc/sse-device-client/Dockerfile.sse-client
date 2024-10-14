@@ -1,0 +1,11 @@
+# Build stage
+FROM rust:1.67 as builder
+WORKDIR /app
+COPY . .
+RUN cd sse-device-client && cargo build --release
+
+# Production stage
+FROM debian:buster-slim
+WORKDIR /app
+COPY --from=builder /app/sse-device-client/target/release/sse-device-client /usr/local/bin/sse-device-client
+CMD ["sse-device-client"]
